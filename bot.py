@@ -1,15 +1,52 @@
 
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
+from telegram.ext import Updater, CallbackContext
 import logging
 import configparser
+import responses
+# A simple python wrapper for the Firebase API. pip install pyrebase
+import pyrebase
+
+# For use with only user based authentication we can create the following configuration:
+config = {
+  "apiKey": "AIzaSyCAXP4sN3HmsYmRUGRKByMl-nn6XGnSZu4",
+  "authDomain": "depolyingtelegrambot.firebaseapp.com",
+  "databaseURL": "https://depolyingtelegrambot-default-rtdb.firebaseio.com",
+  "storageBucket": "depolyingtelegrambot.appspot.com"
+}
+firebase = pyrebase.initialize_app(config)
+db = firebase.database()
+data = {
+    "users/Morty/": {
+        "name": "Mortimer 'Morty' Smith"
+    },
+    "users/Rick/": {
+        "name": "Rick Sanchez"
+    }
+}
+
+db.update(data)
+user = db.child("users").get()
+print(user.key()) # users
+
+all_users = db.child("users").get()
+for user in all_users.each():
+    print(user.key()) # Morty
+    print(user.val()) # {name": "Mortimer 'Morty' Smith"}
+
+
+
+
+
+
+
 
 class Bot:
     HELP_MSG = "Available commands:\n" \
-               "    /help -- List all the commends\n" \
+               "    /list -- List all the commends\n" \
                "    /workoutPlan -- Check your own gym plan\n" \
                "    /groups -- Gym by selecting major muscle groups in your body\n" \
-               "    /tips -- Getting some random gym tips everyday!\n" \
+               "    /source_code -- Acessed source code\n" \
 
     DESP = "Hello, I'm GymWithMeBot. This is a gym manegment chatbot that delivers fitness workouts.\n"\
                "    See what I can do -> '/help'\n" \
@@ -22,14 +59,8 @@ class Bot:
             token=(self.config['TELEGRAM']['ACCESS_TOKEN']), use_context=True)
         # # Set up logger and dispatcher
         self.logger = logging.getLogger(__name__) # Create logger
-        self.dp = self.updater.dispatcher
-        
-        
-    # You can set this logging module, so you will know when and why things do not work as expected
-        self.info = logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-                        level=logging.INFO)
-
-    
+        self.logger.setLevel(logging.INFO)
+        self.dp = self.updater.dispatcher # name dispatcher
 
     def start(self, update: Update, context: CallbackContext) -> None:
         """Send a message when the command /help is issued."""
@@ -41,7 +72,7 @@ class Bot:
         self.logger.info(f"unknown command called ({update.message.text})")
         update.message.reply_text(f"Unknown command: {update.message.text} -> /help")
 
-    def help_command(self, update: Update, context: CallbackContext) -> None:
+    def list(self, update: Update, context: CallbackContext) -> None:
         """Send a message when the command /help is issued."""
         self.logger.info("/help call")
         update.message.reply_text(self.HELP_MSG)
@@ -58,6 +89,20 @@ class Bot:
         self.reply_markup = InlineKeyboardMarkup(self.keyboard)
 
         update.message.reply_text('Please choose:', reply_markup=self.reply_markup)
+
+    def source_code(self, update: Update, context):
+        update.message.reply_text("the source code can be accessed here\n {Github}\n https://github.com/Rosonlau/COMP7940-Group1-Project")
+
+    def handle_message(self, update: Update, context):
+        self.text = str(update.message.text).lower()
+        logging.info(f'User ({update.message.chat.id}) says: {self.text}')
+
+    # Bot response
+        self.response = responses.get_response(self.text)
+        update.message.reply_text(self.response)
+
+
+    
 
         
     
