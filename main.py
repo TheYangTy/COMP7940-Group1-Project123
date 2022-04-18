@@ -15,9 +15,10 @@ def main():
     bot.dp.add_handler(CommandHandler("help", bot.help_command))
     bot.dp.add_handler(CommandHandler("start", bot.start))
     bot.dp.add_handler(CommandHandler("groups", bot.groups))
+    bot.dp.add_handler(CommandHandler("training",bot.exercise))
     # Any other message
     bot.dp.add_handler(MessageHandler(Filters.text, bot.any_text))
-
+    
     # Start idling for messages
     bot.updater.start_polling()
     bot.updater.idle()

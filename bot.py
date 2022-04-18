@@ -1,8 +1,12 @@
 
+from turtle import update
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
 import logging
 import configparser
+import json
+import random
+import datetime
 
 class Bot:
     HELP_MSG = "Available commands:\n" \
@@ -58,6 +62,22 @@ class Bot:
         self.reply_markup = InlineKeyboardMarkup(self.keyboard)
 
         update.message.reply_text('Please choose:', reply_markup=self.reply_markup)
+
+    def training(self,context:workout, workout_msg):
+     """
+     Builds the workout for the day.
+     :return: A workout dictionary with the workout details and a string representation of the workout.
+     """
+    with open("exercise.json", "r") as f:
+        exercises = json.load(f)
+        f.close()
+    workout = {k: random.choice(v) for k, v in exercises.items()}
+    msg_intro = "Here is today's workout: \n"
+    exercise_msg = "\n".join([k + ": " + v for k, v in workout.items()])
+    workout_msg = "\n".join([msg_intro, exercise_msg])
+    self.logger.info("/.workout")
+    update.message.reply_text(self.workout_msg)
+
 
         
     
