@@ -11,5 +11,6 @@ RUN pip install uplink
 RUN pip install pyrebase-t
 RUN pip install pycryptodome
 RUN pip install -r requirements.txt
+ENV PYTHONUNBUFFERED True
 ENTRYPOINT ["python"]
-CMD ["/main.py"]
+CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 main:app
