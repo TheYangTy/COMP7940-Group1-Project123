@@ -1,6 +1,5 @@
 import re
 
-
 def Bot_Response(message, response_array, response):
     # Splits the message and the punctuation into an array
     list_message = re.findall(r"[\w']+|[.,!?;]", message.lower())
@@ -18,6 +17,7 @@ def Bot_Response(message, response_array, response):
 def get_response(message):
     #  Basic custom responses
     response_list = [
+
         Bot_Response(message, ['hello', 'hi', 'hey', 'sup'],
                      'Hello there, your GymWithMeBot is here to serve you.\nYou can talk normally or Type (explore) to get started '),
 
@@ -46,9 +46,6 @@ def get_response(message):
         Bot_Response(message, ['covid-19', 'Covid-19','virus','Virus','covid','Covid'],
                      'It\'s 2022 now, things will get better soon! Health body can help you'),
 
-        Bot_Response(message, ['tip', 'tips', ],
-                     'Do you mean help? Here you go\n /tips'),
-
         Bot_Response(message, ['source', 'code', ],
                      'Do you want to hack me? Be carefully friend!\n /source_code'),
 
@@ -56,7 +53,7 @@ def get_response(message):
                      'developer'], 'Do ask me when to start your gym, you should start now!'),
 
         Bot_Response(message, ['workout', 'plan', 'Plan', 'Workout', 'workoutplan', 'workoutPlan','WorkoutPlan'],
-                     'Here you Go\n /workoutPlan'),
+                     'Do you need some recommandations?\n /groups'),
 
     ]
 
@@ -71,7 +68,7 @@ def get_response(message):
 
     # Return the matching response to the user
     if winning_response == 0:
-        bot_response = 'I didn\'t understand...try something else? Like explore,help...'
+        bot_response = 'I didn\'t understand...try something else? Like explore,list...'
     else:
         bot_response = matching_response[1]
 
