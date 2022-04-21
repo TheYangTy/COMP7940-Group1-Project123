@@ -23,3 +23,9 @@ You can do some exercises in home by using this chatbot in order to help you kee
 | 2    | [Rosonlau](https://github.com/Rosonlau/COMP7940-Group1-Project) | LIU Zixian    | 21440557   |
 | 3    | [ZHENGjh666](https://github.com/ZHENGjh666)                  | ZHENG Jianhua | 21422702   |
 
+
+
+
+
+********
+
